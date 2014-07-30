@@ -28,14 +28,14 @@ And include at least the following into the build.gradle of your project
     }
 
     javacard {
-      sdk = file('path-to-your-sdk')
-    }        
+        sdk = file('path-to-your-sdk')
 
-    cap {
-        aid = '0x12:0x34:0x00:0x00:0x00:0x01'
-        sourcePackage = 'com.example.my.jc.code'
-        applets = [ '0x12:0x34:0x00:0x00:0x00:0x01:0x01': 'Applet' ]
-        version = '1.0'
+        cap {
+            aid = '0x12:0x34:0x00:0x00:0x00:0x01'
+            sourcePackage = 'com.example.my.jc.code'
+            applets = [ '0x12:0x34:0x00:0x00:0x00:0x01:0x01': 'Applet' ]
+            version = '1.0'
+        }
     }
 
 Before running the compilation you need to download the JavaCard SDK. The current implementation is

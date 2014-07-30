@@ -35,8 +35,8 @@ class JavacardPlugin implements Plugin<Project> {
 
         project.getTasks().create('cap', Cap.class) {
             dependsOn(project.compileJava)
-            capExtension = project.extensions.create(CapExtension.NAME, CapExtension)
             jcExtension = project.extensions.create(JavacardExtension.NAME, JavacardExtension)
+            capExtension = jcExtension.extensions.create(CapExtension.NAME, CapExtension)
             classesDir = project.sourceSets.main.output.classesDir.getPath()
             capsDir = project.getBuildDir().getPath() + "${File.separator}caps"
         }
