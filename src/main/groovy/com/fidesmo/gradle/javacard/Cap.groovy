@@ -50,24 +50,40 @@ class Cap extends DefaultTask {
     }
 
 
-    protected def osDependent(Map<String, Object> options) {
+    protected def osDependent(Closure closure) {
+
+        def options = new Object(){
+            def windows
+            def others
+        }
+
+        closure.setDelegate(options)
+        closure.setResolveStrategy(Closure.DELEGATE_ONLY)
+        closure.call()
+
         def os = System.getProperty('os.name').toLowerCase()
-        if(os.contains('windows') && options.contains('windows')) {
-            options['windows']
+        if(os.contains('windows')) {
+            options.windows
         } else {
-            options['others']
+            options.others
         }
     }
 
     protected def findExecutable(String name) {
-        [ jcExtension.sdk.getPath(), 'bin', osDependent([windows: "${name}.bat", others: name])].join(File.separator)
+        [ jcExtension.sdk.getPath(), 'bin', osDependent { windows =  "${name}.bat"; others = name }].join(File.separator)
     }
 
     @TaskAction
     def create() {
         capExtension.validate()
         project.exec {
-            commandLine(findExecutable('converter'))
+            commandLine(
+                osDependent {
+                    def converter = findExecutable('converter')
+                    windows = converter
+                    others = [ 'sh',  converter]
+                })
+
             args([ '-out', 'CAP',
                    '-d',  capsDir,
                    '-classdir', classesDir,
