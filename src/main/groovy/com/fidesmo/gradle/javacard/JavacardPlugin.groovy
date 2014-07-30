@@ -20,6 +20,7 @@ package com.fidesmo.gradle.javacard
 import org.gradle.api.Project
 import org.gradle.api.Plugin
 import org.gradle.api.plugins.JavaPlugin
+import org.gradle.api.tasks.Exec
 
 class JavacardPlugin implements Plugin<Project> {
 
@@ -33,13 +34,30 @@ class JavacardPlugin implements Plugin<Project> {
         project.sourceCompatibility = '1.2'
         project.targetCompatibility = '1.2'
 
-        project.getTasks().create('cap', Cap.class) {
-            dependsOn(project.compileJava)
-            jcExtension = project.extensions.create(JavacardExtension.NAME, JavacardExtension)
-            capExtension = jcExtension.extensions.create(CapExtension.NAME, CapExtension)
-            classesDir = project.sourceSets.main.output.classesDir.getPath()
-            capsDir = project.getBuildDir().getPath() + "${File.separator}caps"
+        def jcExtension = project.extensions.create(JavacardExtension.NAME, JavacardExtension)
+        def capExtension = jcExtension.extensions.create(CapExtension.NAME, CapExtension)
+        project.afterEvaluate {
+            capExtension.validate() FIXME
         }
+
+        addCapTask(project, jcExtension, capExtension)
+    }
+
+
+    private def addCapTask(Project project, JavacardExtension jcExtension, CapExtension capExtension) {
+
+        def cap = project.getTasks().create("cap", Cap)
+        cap.group = 'build'
+        cap.description = 'Create a cap for installation on a smart card'
+        cap.dependsOn(project.compileJava)
+        cap.classesDir = project.sourceSets.main.output.classesDir
+        cap.capsDir = new File(project.getBuildDir(), 'caps')
+
+        cap.conventionMapping.sourcePackage = { capExtension.sourcePackage }
+        cap.conventionMapping.aid = { capExtension.aid }
+        cap.conventionMapping.version = { capExtension.version }
+        cap.conventionMapping.applets = { capExtension.applets }
+        cap.conventionMapping.javacardHome = { jcExtension.sdk }
     }
 }
 

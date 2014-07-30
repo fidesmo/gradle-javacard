@@ -25,30 +25,23 @@ import org.gradle.api.tasks.OutputFile
 
 class Cap extends DefaultTask {
 
-    String group = 'build'
-    String description = 'Create a cap for installation on a smart card'
-
-    CapExtension capExtension
-    JavacardExtension jcExtension
-
-    @Input
-    String classesDir
-
-    @Input
-    String capsDir
+    @Input File classesDir
+    @Input File capsDir
+    @Input File javacardHome
+    @Input String sourcePackage
+    @Input String aid
+    @Input String version
+    @Input Map<String, String> applets
 
     @InputDirectory
     File getSourcePackagePath() {
-        capExtension.validate()
-        new File(classesDir + File.separator + capExtension.sourcePackage.replace('.', File.separator))
+        new File(classesDir.getPath() + File.separator + getSourcePackage().replace('.', File.separator))
     }
 
     @OutputFile
     File getCapFile() {
-        capExtension.validate()
-        new File(capsDir + File.separator + capExtension.sourcePackage.replace('.', File.separator) + '/javacard/ndef.cap') // FIXME: hard coded stuff
+        new File(capsDir.getPath() + File.separator + getSourcePackage().replace('.', File.separator) + '/javacard/ndef.cap') // FIXME: hard coded stuff
     }
-
 
     protected def osDependent(Closure closure) {
 
@@ -70,12 +63,11 @@ class Cap extends DefaultTask {
     }
 
     protected def findExecutable(String name) {
-        [ jcExtension.sdk.getPath(), 'bin', osDependent { windows =  "${name}.bat"; others = name }].join(File.separator)
+        [ getJavacardHome().getPath(), 'bin', osDependent { windows =  "${name}.bat"; others = name }].join(File.separator)
     }
 
     @TaskAction
     def create() {
-        capExtension.validate()
         project.exec {
             commandLine(
                 osDependent {
@@ -87,12 +79,12 @@ class Cap extends DefaultTask {
             args([ '-out', 'CAP',
                    '-d',  capsDir,
                    '-classdir', classesDir,
-                   '-exportpath', [ jcExtension.sdk.getPath(), "api_export_files"].join(File.separator) ])
+                   '-exportpath', [ getJavacardHome().getPath(), "api_export_files"].join(File.separator) ])
 
-            args(capExtension.applets.collect {
-                     aid, className -> [ '-applet', aid, capExtension.sourcePackage + '.' + className ] } .flatten())
+            args(getApplets().collect {
+                     aid, className -> [ '-applet', aid, getSourcePackage() + '.' + className ] } .flatten())
 
-            args([ capExtension.sourcePackage, capExtension.aid, capExtension.version ])
+            args([ getSourcePackage(), getAid(), getVersion() ])
         }
     }
 }
