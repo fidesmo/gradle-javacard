@@ -17,7 +17,7 @@
 
 package com.fidesmo.gradle.javacard
 
-import org.gradle.api.GradleException
+import org.gradle.api.InvalidUserDataException
 
 class CapExtension {
 
@@ -31,24 +31,24 @@ class CapExtension {
     def validate() {
         String aidRegEx = '^(0x[0-9A-Fa-f]{1,2}(:|$)){5,16}'
         if (!aid.matches(aidRegEx)) {
-            throw new GradleException('Invalid aid for CAP')
+            throw new InvalidUserDataException('Invalid aid for CAP')
         }
 
         if(!sourcePackage.matches('^([a-zA-Z_]\\w*(\\.|$))+')) {
-            throw new GradleException('Invalid sourcePackage name for CAP')
+            throw new InvalidUserDataException('Invalid sourcePackage name for CAP')
         }
 
         if(!version.matches('^\\d+\\.\\d+$')) {
-            throw new GradleException('Invalid version format for CAP')
+            throw new InvalidUserDataException('Invalid version format for CAP')
         }
 
         applets.each { aid, className ->
             if(!aid.matches(aidRegEx)) {
-                throw new GradleException("Invalid aid for applet '${className}'")
+                throw new InvalidUserDataException("Invalid aid for applet '${className}'")
             }
 
             if(!className.matches('^[a-zA-Z_]\\w*$')) {
-                throw new GradleException("Invalid class name '${className}'")
+                throw new InvalidUserDataException("Invalid class name '${className}'")
             }
         }
     }

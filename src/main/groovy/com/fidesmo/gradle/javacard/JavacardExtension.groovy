@@ -17,11 +17,17 @@
 
 package com.fidesmo.gradle.javacard
 
-
+import org.gradle.api.InvalidUserDataException
 
 class JavacardExtension {
 
     static final String NAME = "javacard"
 
     File sdk
+
+    def validate() {
+        if (!sdk.isDirectory()) {
+            throw new InvalidUserDataException("${sdk.getPath} is not a directory")
+        }
+    }
 }

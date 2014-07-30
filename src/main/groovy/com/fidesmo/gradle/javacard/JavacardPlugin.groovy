@@ -37,7 +37,8 @@ class JavacardPlugin implements Plugin<Project> {
         def jcExtension = project.extensions.create(JavacardExtension.NAME, JavacardExtension)
         def capExtension = jcExtension.extensions.create(CapExtension.NAME, CapExtension)
         project.afterEvaluate {
-            capExtension.validate() FIXME
+            jcExtension.validate()
+            capExtension.validate()
         }
 
         addCapTask(project, jcExtension, capExtension)
