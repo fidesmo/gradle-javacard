@@ -32,30 +32,33 @@ class Cap extends DefaultTask {
         new File(capsDir + File.separator + extension.sourcePackage.replace('.', File.separator) + '/javacard/ndef.cap') // FIXME: hard coded stuff
     }
 
+
+    protected def osDependent(Map<String, Object> options) {
+        def os = System.getProperty('os.name').toLowerCase()
+        if(os.contains('windows') && options.contains('windows')) {
+            options['windows']
+        } else {
+            options['others']
+        }
+    }
+
+    protected def findExecutable(String name) {
+        [ javacardHome, 'bin', osDependent([windows: "${name}.bat", others: name])].join(File.separator)
+    }
+
     @TaskAction
     def create() {
+        project.exec {
+            commandLine(findExecutable('converter'))
+            args([ '-out', 'CAP',
+                   '-d',  capsDir,
+                   '-classdir', classesDir,
+                   '-exportpath', "${javacardHome}${File.separator}api_export_files" ])
 
-        def commandWithOptions = [
-            "${javacardHome}${File.separator}bin${File.separator}converter",
-            '-out CAP',
-            '-d',  capsDir,
-            '-classdir', classesDir,
-            '-exportpath', "${javacardHome}${File.separator}api_export_files"
-        ]
+            args(extension.applets.collect {
+                     aid, className -> [ '-applet', aid, extension.sourcePackage + '.' + className ] } .flatten())
 
-        def appletOptions = extension.applets.collect { aid, className -> [ '-applet', aid, extension.sourcePackage + '.' + className ] }        
-        def arguments = [ extension.sourcePackage, extension.aid, extension.version ]
-        def translateCommand = (commandWithOptions << appletOptions << arguments).flatten().join(' ')
-
-        // FIXME: add as seperate task
-        def proc = translateCommand.execute()
-        proc.waitFor()
-
-        if(proc.exitValue() != 0) {
-            println translateCommand
-            println proc.in.text
-            println proc.err.text
-            assert(proc.exitValue() == 0)
+            args([ extension.sourcePackage, extension.aid, extension.version ])
         }
     }
 }
