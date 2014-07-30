@@ -33,13 +33,10 @@ class JavacardPlugin implements Plugin<Project> {
         project.sourceCompatibility = '1.2'
         project.targetCompatibility = '1.2'
 
-        // register extension for building cap
-        CapExtension capExtension = project.extensions.create(CapExtension.NAME, CapExtension)
-
         project.getTasks().create('cap', Cap.class) {
             dependsOn(project.compileJava)
-            extension = capExtension
-            javacardHome = '/home/yves/opt/java-card-sdk'
+            capExtension = project.extensions.create(CapExtension.NAME, CapExtension)
+            jcExtension = project.extensions.create(JavacardExtension.NAME, JavacardExtension)
             classesDir = project.sourceSets.main.output.classesDir.getPath()
             capsDir = project.getBuildDir().getPath() + "${File.separator}caps"
         }

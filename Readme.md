@@ -27,6 +27,10 @@ And include at least the following into the build.gradle of your project
         classpath 'com.fidesmo.gradle:javacard:0.1-SNAPSHOT'
     }
 
+    javacard {
+      sdk = file('path-to-your-sdk')
+    }        
+
     cap {
         aid = '0x12:0x34:0x00:0x00:0x00:0x01'
         sourcePackage = 'com.example.my.jc.code'

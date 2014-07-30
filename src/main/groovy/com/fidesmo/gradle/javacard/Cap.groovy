@@ -28,7 +28,8 @@ class Cap extends DefaultTask {
     String group = 'build'
     String description = 'Create a cap for installation on a smart card'
 
-    CapExtension extension;
+    CapExtension capExtension
+    JavacardExtension jcExtension
 
     @Input
     String classesDir
@@ -36,19 +37,16 @@ class Cap extends DefaultTask {
     @Input
     String capsDir
 
-    @Input
-    String javacardHome
-
     @InputDirectory
     File getSourcePackagePath() {
-        extension.validate()
-        new File(classesDir + File.separator + extension.sourcePackage.replace('.', File.separator))
+        capExtension.validate()
+        new File(classesDir + File.separator + capExtension.sourcePackage.replace('.', File.separator))
     }
 
     @OutputFile
     File getCapFile() {
-        extension.validate()
-        new File(capsDir + File.separator + extension.sourcePackage.replace('.', File.separator) + '/javacard/ndef.cap') // FIXME: hard coded stuff
+        capExtension.validate()
+        new File(capsDir + File.separator + capExtension.sourcePackage.replace('.', File.separator) + '/javacard/ndef.cap') // FIXME: hard coded stuff
     }
 
 
@@ -62,23 +60,23 @@ class Cap extends DefaultTask {
     }
 
     protected def findExecutable(String name) {
-        [ javacardHome, 'bin', osDependent([windows: "${name}.bat", others: name])].join(File.separator)
+        [ jcExtension.sdk.getPath(), 'bin', osDependent([windows: "${name}.bat", others: name])].join(File.separator)
     }
 
     @TaskAction
     def create() {
-        extension.validate()
+        capExtension.validate()
         project.exec {
             commandLine(findExecutable('converter'))
             args([ '-out', 'CAP',
                    '-d',  capsDir,
                    '-classdir', classesDir,
-                   '-exportpath', "${javacardHome}${File.separator}api_export_files" ])
+                   '-exportpath', [ jcExtension.sdk.getPath(), "api_export_files"].join(File.separator) ])
 
-            args(extension.applets.collect {
-                     aid, className -> [ '-applet', aid, extension.sourcePackage + '.' + className ] } .flatten())
+            args(capExtension.applets.collect {
+                     aid, className -> [ '-applet', aid, capExtension.sourcePackage + '.' + className ] } .flatten())
 
-            args([ extension.sourcePackage, extension.aid, extension.version ])
+            args([ capExtension.sourcePackage, capExtension.aid, capExtension.version ])
         }
     }
 }
