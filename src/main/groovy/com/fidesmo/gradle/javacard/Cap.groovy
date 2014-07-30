@@ -19,6 +19,9 @@ class Cap extends DefaultTask {
     @Input
     String capsDir
 
+    @Input
+    String javacardHome
+
     @InputDirectory
     File getSourcePackagePath() {
         new File(classesDir + File.separator + extension.sourcePackage.replace('.', File.separator))
@@ -31,8 +34,6 @@ class Cap extends DefaultTask {
 
     @TaskAction
     def create() {
-
-        def javacardHome = '/home/yves/opt/java-card-sdk' // FIXME: make configurable
 
         def commandWithOptions = [
             "${javacardHome}${File.separator}bin${File.separator}converter",
