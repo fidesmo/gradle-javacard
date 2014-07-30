@@ -15,9 +15,7 @@ In order to use this plugin you need to get into your local maven repository by 
 
 And include at least the following into the build.gradle of your project
 
-    import com.fidesmo.gradle.javacard.JavacardPlugin
-    apply plugin: 'java'
-    apply plugin: JavacardPlugin
+    apply plugin: 'javacard'
 
     buildscript {
         repositories {
