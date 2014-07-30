@@ -47,12 +47,3 @@ class JavacardPlugin implements Plugin<Project> {
 }
 
 
-class CapExtension {
-
-    static final String NAME = "cap"
-
-    String aid
-    String sourcePackage
-    Map<String, String> applets
-    String version
-}

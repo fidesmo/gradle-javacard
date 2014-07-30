@@ -41,11 +41,13 @@ class Cap extends DefaultTask {
 
     @InputDirectory
     File getSourcePackagePath() {
+        extension.validate()
         new File(classesDir + File.separator + extension.sourcePackage.replace('.', File.separator))
     }
 
     @OutputFile
     File getCapFile() {
+        extension.validate()
         new File(capsDir + File.separator + extension.sourcePackage.replace('.', File.separator) + '/javacard/ndef.cap') // FIXME: hard coded stuff
     }
 
@@ -65,6 +67,7 @@ class Cap extends DefaultTask {
 
     @TaskAction
     def create() {
+        extension.validate()
         project.exec {
             commandLine(findExecutable('converter'))
             args([ '-out', 'CAP',
