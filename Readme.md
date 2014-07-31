@@ -1,8 +1,10 @@
 Compling javacard applets with gradle
 -------------------------------------
 
-Currently only the creation of a single CAP file from a specific package is supported (Or more to
-put it the other way round: creation of EXP files is not yet supported).
+Features
+--------
+
+ - compile a package containg an applet into a cap file
 
 
 Usage
