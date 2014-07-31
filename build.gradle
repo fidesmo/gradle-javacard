@@ -9,7 +9,6 @@ dependencies {
 buildscript {
    repositories {
       mavenCentral()
-      maven { url "https://oss.sonatype.org/content/groups/public"}
    }
    dependencies {
       classpath 'com.github.townsfolk:gradle-release:1.2'
@@ -21,7 +20,6 @@ publishing {
         maven(MavenPublication) {
             groupId 'com.fidesmo.gradle'
             artifactId 'javacard'
-            version '0.1-SNAPSHOT'
             artifact jar
         }
     }
