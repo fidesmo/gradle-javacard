@@ -23,11 +23,33 @@ class JavacardExtension {
 
     static final String NAME = "javacard"
 
-    File sdk
+    String aid
+    String sourcePackage
+    Map<String, String> applets
+    String version
 
     def validate() {
-        if (!sdk.isDirectory()) {
-            throw new InvalidUserDataException("${sdk.getPath} is not a directory")
+        String aidRegEx = '^(0x[0-9A-Fa-f]{1,2}(:|$)){5,16}'
+        if (!aid.matches(aidRegEx)) {
+            throw new InvalidUserDataException('Invalid aid for CAP')
+        }
+
+        if(!sourcePackage.matches('^([a-zA-Z_]\\w*(\\.|$))+')) {
+            throw new InvalidUserDataException('Invalid sourcePackage name for CAP')
+        }
+
+        if(!version.matches('^\\d+\\.\\d+$')) {
+            throw new InvalidUserDataException('Invalid version format for CAP')
+        }
+
+        applets.each { aid, className ->
+            if(!aid.matches(aidRegEx)) {
+                throw new InvalidUserDataException("Invalid aid for applet '${className}'")
+            }
+
+            if(!className.matches('^[a-zA-Z_]\\w*$')) {
+                throw new InvalidUserDataException("Invalid class name '${className}'")
+            }
         }
     }
 }
