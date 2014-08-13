@@ -43,6 +43,23 @@ class JavacardPluginTest {
         project.apply plugin: 'javacard'
     }
 
+    @Test void checkJavacardHomeSetup() {
+        def plugin = project.getPlugins().findPlugin('javacard')
+        assertThat(plugin.javacardHome, equalTo('.'))
+    }
+
+    @Test void checkJavacardToolConfiguration() {
+        def configuration = project.getConfigurations().getByName('javacardTools')
+        assertTrue(configuration.contains(project.file('ant-tasks/lib/jctasks.jar')))
+        assertTrue(configuration.contains(project.file('lib/converter.jar')))
+        assertTrue(configuration.contains(project.file('lib/offcardverifier.jar')))
+    }
+
+    @Test void checkCompileConfiguration() {
+        def configuration = project.getConfigurations().getByName('compile')
+        assertTrue(configuration.contains(project.file('lib/api.jar')))
+    }
+
     @Test void appliesTheJavaPluginToTheProject() {
         assertTrue(project.getPlugins().hasPlugin(JavaPlugin))
     }
