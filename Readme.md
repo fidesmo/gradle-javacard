@@ -1,11 +1,12 @@
 Compling javacard applets with gradle
 -------------------------------------
 
+[![Build Status](https://travis-ci.org/fidesmo/gradle-javacard.svg?branch=master)](https://travis-ci.org/fidesmo/gradle-javacard)
+
 Features
 --------
 
  - compile a package containg an applet into a cap file
-
 
 Usage
 -----
