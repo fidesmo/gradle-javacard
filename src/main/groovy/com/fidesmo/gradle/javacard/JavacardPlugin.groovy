@@ -19,47 +19,65 @@ package com.fidesmo.gradle.javacard
 
 import org.gradle.api.Project
 import org.gradle.api.Plugin
+import org.gradle.api.InvalidUserDataException
 import org.gradle.api.plugins.JavaPlugin
-import org.gradle.api.tasks.Exec
+import com.fidesmo.gradle.javacard.ConvertJavacardTask
+
 
 class JavacardPlugin implements Plugin<Project> {
 
+    def javacardHome = System.env['JC_HOME']
+
     void apply(Project project) {
 
-         if (!project.plugins.hasPlugin(JavaPlugin)) {
-             project.plugins.apply(JavaPlugin)
-         }
+        if (!javacardHome) {
+            throw new InvalidUserDataException('JC_HOME must be set in order to use javacard plugin')
+        } else if(! project.file(javacardHome).isDirectory()) {
+            throw new InvalidUserDataException('JC_HOME must point to a valid directory')
+        }
+
+        if (!project.plugins.hasPlugin(JavaPlugin)) {
+            project.plugins.apply(JavaPlugin)
+        }
 
         // configure java build
         project.sourceCompatibility = '1.2'
         project.targetCompatibility = '1.2'
 
+        // FIXME: support multiple packages
         def jcExtension = project.extensions.create(JavacardExtension.NAME, JavacardExtension)
-        def capExtension = jcExtension.extensions.create(CapExtension.NAME, CapExtension)
         project.afterEvaluate {
             jcExtension.validate()
-            capExtension.validate()
         }
 
-        addCapTask(project, jcExtension, capExtension)
+        project.configurations {
+            javacardTools
+        }
+
+        project.dependencies {
+            javacardTools project.files("${javacardHome}/ant-tasks/lib/jctasks.jar")
+            javacardTools project.files("${javacardHome}/lib/converter.jar")
+            javacardTools project.files("${javacardHome}/lib/offcardverifier.jar")
+            compile project.files("${javacardHome}/lib/api.jar")
+        }
+
+        addConvertTask(project, jcExtension)
     }
 
 
-    private def addCapTask(Project project, JavacardExtension jcExtension, CapExtension capExtension) {
+    private def addConvertTask(Project project, JavacardExtension jcExtension) {
 
-        def cap = project.getTasks().create("cap", Cap)
-        cap.group = 'build'
-        cap.description = 'Create a cap for installation on a smart card'
-        cap.dependsOn(project.compileJava)
-        cap.classesDir = project.sourceSets.main.output.classesDir
-        cap.capsDir = new File(project.getBuildDir(), 'caps')
+        def convert = project.getTasks().create("convertJavacard", ConvertJavacardTask)
 
-        cap.conventionMapping.sourcePackage = { capExtension.sourcePackage }
-        cap.conventionMapping.aid = { capExtension.aid }
-        cap.conventionMapping.version = { capExtension.version }
-        cap.conventionMapping.applets = { capExtension.applets }
-        cap.conventionMapping.javacardHome = { jcExtension.sdk }
+        convert.configure {
+            group = 'build'
+            description = 'Create a CAP file for installation on a smart card'
+            dependsOn(project.compileJava)
+        }
+
+        convert.conventionMapping.aid = { jcExtension.aid }
+        convert.conventionMapping.packagePath = { jcExtension.sourcePackage }
+        convert.conventionMapping.version = { jcExtension.version }
+        convert.conventionMapping.executableModules = { jcExtension.applets }
     }
 }
-
-

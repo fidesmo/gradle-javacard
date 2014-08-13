@@ -30,19 +30,19 @@ And include at least the following into the build.gradle of your project
     }
 
     javacard {
-        sdk = file('path-to-your-sdk')
-
-        cap {
-            aid = '0x12:0x34:0x00:0x00:0x00:0x01'
-            sourcePackage = 'com.example.my.jc.code'
-            applets = [ '0x12:0x34:0x00:0x00:0x00:0x01:0x01': 'Applet' ]
-            version = '1.0'
-        }
-    }
+        aid = '0x12:0x34:0x00:0x00:0x00:0x01'
+        sourcePackage = 'com.example.my.jc.code'
+        applets = [ '0x12:0x34:0x00:0x00:0x00:0x01:0x01': 'Applet' ]
+        version = '1.0'
+     }
 
 Before running the compilation you need to download the JavaCard SDK. The current implementation is
 tested using Linux and the `Java Card Development Kit 2.2.2`. It is supposed the to work also for
 the all other `Java Card Development Kit 2.x.x` under MacOSx, Windows and Linux and as well with the
 `Java Card Classic Development Kit 3.x.x` under Windows.
 
-The applet is compiled running the cap target, and can found afterwards in `build/caps`.
+The applet is converted from jvm byte code to javaCard byte code, by running the `convertJavaCard`
+task.
+
+     export JC_HOME='path/to/javaCardSdk'
+     gradle convertJavacard
