@@ -1,9 +1,15 @@
 apply plugin: 'groovy'
 apply plugin: 'maven-publish'
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
     compile gradleApi()
     compile localGroovy()
+    testCompile 'junit:junit:4.11'
+    testCompile 'org.hamcrest:hamcrest-all:1.3'
 }
 
 buildscript {
