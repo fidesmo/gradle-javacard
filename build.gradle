@@ -37,6 +37,10 @@ publishing {
     }
 }
 
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.0'
+}
+
 test {
      environment 'JC_HOME', '.'
 }
