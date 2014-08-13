@@ -33,13 +33,12 @@ class ConvertJavacardTask extends DefaultTask {
     def javacardHome = System.env.JC_HOME
     def javacardDirectory = new File(project.getBuildDir(), 'javacard')
 
-    def getPackageFilepath() {
+    private def getPackageFilepath() {
         getPackagePath().replace('.', File.separator)
     }
 
-    def getPackageName() {
-        getPackagePath().split('.').last
-        "ndef"
+    private def getPackageName() {
+        getPackagePath().split('\\.').last()
     }
 
     @OutputFile
