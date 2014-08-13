@@ -37,4 +37,8 @@ publishing {
     }
 }
 
+test {
+     environment 'JC_HOME', '.'
+}
+
 apply plugin: 'release'

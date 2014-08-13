@@ -19,19 +19,26 @@ package com.fidesmo.gradle.javacard
 
 import org.gradle.api.Project
 import org.gradle.api.Plugin
+import org.gradle.api.InvalidUserDataException
 import org.gradle.api.plugins.JavaPlugin
 import com.fidesmo.gradle.javacard.ConvertJavacardTask
 
+
 class JavacardPlugin implements Plugin<Project> {
 
-    // FIXME: abort build if this is not set
-    def javacardHome = System.env.JC_HOME
+    def javacardHome = System.env['JC_HOME']
 
     void apply(Project project) {
 
-         if (!project.plugins.hasPlugin(JavaPlugin)) {
-             project.plugins.apply(JavaPlugin)
-         }
+        if (!javacardHome) {
+            throw new InvalidUserDataException('JC_HOME must be set in order to use javacard plugin')
+        } else if(! project.file(javacardHome).isDirectory()) {
+            throw new InvalidUserDataException('JC_HOME must point to a valid directory')
+        }
+
+        if (!project.plugins.hasPlugin(JavaPlugin)) {
+            project.plugins.apply(JavaPlugin)
+        }
 
         // configure java build
         project.sourceCompatibility = '1.2'
