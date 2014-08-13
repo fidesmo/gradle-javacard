@@ -45,4 +45,4 @@ The applet is converted from jvm byte code to javaCard byte code, by running the
 task.
 
      export JC_HOME='path/to/javaCardSdk'
-     gradle convertJavaCard
+     gradle convertJavacard

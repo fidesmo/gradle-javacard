@@ -30,8 +30,8 @@ class ConvertJavacardTask extends DefaultTask {
     @Input String version
     @Input Map<String, String> executableModules
 
-    def javaCardHome = System.env.JC_HOME
-    def javaCardDirectory = new File(project.getBuildDir(), 'javacard')
+    def javacardHome = System.env.JC_HOME
+    def javacardDirectory = new File(project.getBuildDir(), 'javacard')
 
     def getPackageFilepath() {
         getPackagePath().replace('.', File.separator)
@@ -44,12 +44,12 @@ class ConvertJavacardTask extends DefaultTask {
 
     @OutputFile
     def getCapFile() {
-        new File(javaCardDirectory, "${getPackageFilepath()}/javacard/${getPackageName()}.cap")
+        new File(javacardDirectory, "${getPackageFilepath()}/javacard/${getPackageName()}.cap")
     }
 
     @OutputFile
     def getExtFile() {
-        new File(javaCardDirectory, "${getPackageFilepath()}/javacard/${getPackageName()}.ext")
+        new File(javacardDirectory, "${getPackageFilepath()}/javacard/${getPackageName()}.ext")
     }
 
     @InputDirectory
@@ -61,7 +61,7 @@ class ConvertJavacardTask extends DefaultTask {
     def convert() {
         ant.taskdef(name: 'convert',
                     classname: 'com.sun.javacard.ant.tasks.ConverterTask',
-                    classpath: project.configurations.javaCardTools.asPath)
+                    classpath: project.configurations.javacardTools.asPath)
 
         ant.convert(CAP: true,
                     EXP: true,
@@ -71,8 +71,8 @@ class ConvertJavacardTask extends DefaultTask {
                     debug: true,
                     classdir: project.sourceSets.main.output.classesDir,
                     outputdirectory: new File(project.getBuildDir(), 'javacard'),
-                    exportpath: "${javaCardHome}/api_export_files",
-                    classpath: project.configurations.javaCardTools.asPath) {
+                    exportpath: "${javacardHome}/api_export_files",
+                    classpath: project.configurations.javacardTools.asPath) {
 
             getExecutableModules().each() { emAid, fqImplementorClass ->
                 AppletNameAID(appletname: fqImplementorClass, aid: emAid )

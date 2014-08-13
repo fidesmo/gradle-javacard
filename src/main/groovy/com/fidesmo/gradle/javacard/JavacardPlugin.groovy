@@ -25,7 +25,7 @@ import com.fidesmo.gradle.javacard.ConvertJavacardTask
 class JavacardPlugin implements Plugin<Project> {
 
     // FIXME: abort build if this is not set
-    def javaCardHome = System.env.JC_HOME
+    def javacardHome = System.env.JC_HOME
 
     void apply(Project project) {
 
@@ -44,14 +44,14 @@ class JavacardPlugin implements Plugin<Project> {
         }
 
         project.configurations {
-            javaCardTools
+            javacardTools
         }
 
         project.dependencies {
-            javaCardTools project.files("${javaCardHome}/ant-tasks/lib/jctasks.jar")
-            javaCardTools project.files("${javaCardHome}/lib/converter.jar")
-            javaCardTools project.files("${javaCardHome}/lib/offcardverifier.jar")
-            compile project.files("${javaCardHome}/lib/api.jar")
+            javacardTools project.files("${javacardHome}/ant-tasks/lib/jctasks.jar")
+            javacardTools project.files("${javacardHome}/lib/converter.jar")
+            javacardTools project.files("${javacardHome}/lib/offcardverifier.jar")
+            compile project.files("${javacardHome}/lib/api.jar")
         }
 
         addConvertTask(project, jcExtension)
@@ -60,7 +60,7 @@ class JavacardPlugin implements Plugin<Project> {
 
     private def addConvertTask(Project project, JavacardExtension jcExtension) {
 
-        def convert = project.getTasks().create("convertJavaCard", ConvertJavacardTask)
+        def convert = project.getTasks().create("convertJavacard", ConvertJavacardTask)
 
         convert.configure {
             group = 'build'
