@@ -11,23 +11,21 @@ Features
 Usage
 -----
 
-In order to use this plugin you need to get into your local maven repository by executing:
-
-    git clone https://github.com/fidesmo/gradle-javacard.git
-    gradle publishToMavenLocal
-
-And include at least the following into the build.gradle of your project
+Include the new version of the plugin from OSS Sonatype snapshot, by adding the following to your
+`build.gradle`:
 
     apply plugin: 'javacard'
 
     buildscript {
         repositories {
-            mavenLocal()
+            maven {
+                url 'https://oss.sonatype.org/content/repositories/snapshots/'
+            }
         }
-    }
 
-    dependencies {
-        classpath 'com.fidesmo.gradle:javacard:0.1-SNAPSHOT'
+        dependencies {
+            classpath 'com.fidesmo.gradle:javacard:0.2-SNAPSHOT'
+        }
     }
 
     javacard {
