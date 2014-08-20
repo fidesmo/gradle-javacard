@@ -55,6 +55,11 @@ class JavacardPluginTest {
         assertTrue(configuration.contains(project.file('lib/offcardverifier.jar')))
     }
 
+    @Test void checkExportPathsConfiguration() {
+        def configuration = project.getConfigurations().getByName('javacardExport')
+        assertTrue(configuration.contains(project.file('api_export_files')))
+    }
+
     @Test void checkCompileConfiguration() {
         def configuration = project.getConfigurations().getByName('compile')
         assertTrue(configuration.contains(project.file('lib/api.jar')))
