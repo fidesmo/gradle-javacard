@@ -44,9 +44,9 @@ class ConvertJavacardTaskTest {
         task = project.getTasks().create('convertJavacard', ConvertJavacardTask)
         task.configure {
             aid = testAid
-            packagePath = testSourcePackage
+            fullyQualifiedPackageName = testSourcePackage
             version = testVersion
-            executableModules = testApplets
+            applets = testApplets
         }
     }
 

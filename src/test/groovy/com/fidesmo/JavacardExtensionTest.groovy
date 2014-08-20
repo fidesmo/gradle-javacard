@@ -21,52 +21,90 @@ import org.junit.Test
 import org.junit.Before
 import org.gradle.api.InvalidUserDataException
 
+import static org.junit.Assert.assertThat
+import static org.hamcrest.Matchers.*
+
 class JavacardExtensionTest {
 
     JavacardExtension ext
 
     @Before void intializeValidExtension() {
         ext = new JavacardExtension()
-        ext.aid = '0x01:0x02:0x03:0x04:0x05'
-        ext.sourcePackage = 'org.example.javacard.test'
-        ext.version = '1.0'
-        ext.applets = [ '0x01:0x02:0x03:0x04:0x05:0x01': 'Applet' ]
 
+        def configClosure = {
+            cap {
+                aid = '0x01:0x02:0x03:0x04:0x05'
+                packageName = 'org.example.javacard.test'
+                
+                applet {
+                    aid = '0x01:0x02:0x03:0x04:0x05:0x01'
+                    className = 'Applet'
+                }
+                
+                applet {
+                    aid = '0x01:0x02:0x03:0x04:0x05:0x02'
+                    className = 'Applet2'
+                }
+                
+                version = '1.0'
+            }
+        }
+
+        configClosure.delegate = ext
+        configClosure.call()
+    }
+
+    @Test void containsApplets() {
+        assertThat(ext.cap.applets.size(), equalTo(2))
+        assertThat(ext.cap.applets[0].className, equalTo('Applet'))
+        assertThat(ext.cap.applets[1].className, equalTo('Applet2'))
+        assertThat(ext.cap.applets[0].aid.string, equalTo('0x01:0x02:0x03:0x04:0x05:0x01'))
     }
 
     @Test(expected = InvalidUserDataException)
-    void rejectsToInvalidAids() {
-        ext.aid = 'sdasdasdasd'
+    void rejectsInvalidAids() {
+        ext.cap.aid= 'sdasdasdasd'
         ext.validate()
     }
    
     @Test(expected = InvalidUserDataException)
     void rejectsToShortAids() {
-        ext.aid = '0x01:0x02:0x03:0x04'
+        ext.cap.aid = '0x01:0x02:0x03:0x04'
         ext.validate()
     }
 
     @Test(expected = InvalidUserDataException)
     void rejectsInvalidSourcePackage() {
-        ext.sourcePackage = 'com.1domain.blubb'
+        ext.cap.packageName = 'com.1domain.blubb'
         ext.validate()
     }
 
     @Test(expected = InvalidUserDataException)
     void rejectsInvalidVersion() {
-        ext.sourcePackage = '1.0alpha'
+        ext.cap.version = '1.0alpha'
         ext.validate()
     }
 
     @Test(expected = InvalidUserDataException)
     void rejectsInvalidAppletAid() {
-        ext.applets = [ '0x01:0x02': 'Applet' ]
+        ext.cap.applet {
+            aid = '0x01:0x02'
+            className = 'Applet'
+        }
         ext.validate()
     }
 
     @Test(expected = InvalidUserDataException)
     void rejectsInvalidAppletName() {
-        ext.applets = [ '0x01:0x02:0x03:0x04:0x05': 'package.Applet' ]
+        ext.cap.applet {
+            aid = '0x01:0x02:0x03:0x04:0x05'
+            className = 'package.Applet'
+        }
         ext.validate()
+    }
+
+    @Test void aidReturnsHexString() {
+        def hexStr = new JavacardExtension.Aid('0x01:0x23:0x3:0x0').hexString
+        assertThat(hexStr, equalTo('01230300'))
     }
 }

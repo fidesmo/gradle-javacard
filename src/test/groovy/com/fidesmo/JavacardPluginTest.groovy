@@ -73,16 +73,24 @@ class JavacardPluginTest {
 
     @Test void copyExtensionValuesToTask() {
         project.configure(project.javacard) {
-            aid = testAid
-            sourcePackage = testSourcePackage
-            version = testVersion
-            applets = testApplets
+            cap {
+                aid = '0x01:0x02:0x03:0x04:0x05'
+                packageName = 'org.example.javacard.test'
+                
+                applet {
+                    aid = '0x01:0x02:0x03:0x04:0x05:0x01'
+                    className = 'Applet'
+                }
+                
+                version = '1.0'
+            }
         }
+
 
         def task = project.getTasks().findByPath('convertJavacard')
         assertThat(task.getAid(), equalTo(testAid))
-        assertThat(task.getPackagePath(), equalTo(testSourcePackage))
+        assertThat(task.getFullyQualifiedPackageName(), equalTo(testSourcePackage))
         assertThat(task.getVersion(), equalTo(testVersion))
-        assertThat(task.getExecutableModules(), equalTo(testApplets))
+        assertThat(task.getApplets(), equalTo(testApplets))
     }
 }
