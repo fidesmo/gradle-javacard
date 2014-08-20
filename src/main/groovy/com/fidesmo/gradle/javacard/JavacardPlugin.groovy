@@ -76,7 +76,7 @@ class JavacardPlugin implements Plugin<Project> {
         }
 
         convert.conventionMapping.aid = { jcExtension.cap.aid.string }
-        convert.conventionMapping.packageName = { jcExtension.cap.packageName }
+        convert.conventionMapping.fullyQualifiedPackageName = { jcExtension.cap.packageName }
         convert.conventionMapping.version = { jcExtension.cap.version }
         convert.conventionMapping.applets = { jcExtension.cap.applets.collectEntries{[(it.aid.string): it.className]}}
     }

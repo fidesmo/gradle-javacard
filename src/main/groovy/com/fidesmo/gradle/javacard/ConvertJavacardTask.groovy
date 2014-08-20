@@ -26,7 +26,7 @@ import org.gradle.api.tasks.OutputFile
 class ConvertJavacardTask extends DefaultTask {
 
     @Input String aid
-    @Input String packageName
+    @Input String fullyQualifiedPackageName
     @Input String version
     @Input Map<String, String> applets
 
@@ -34,11 +34,11 @@ class ConvertJavacardTask extends DefaultTask {
     def javacardDirectory = new File(project.getBuildDir(), 'javacard')
 
     private def getPackageFilepath() {
-        getPackageName().replace('.', File.separator)
+        getFullyQualifiedPackageName().replace('.', File.separator)
     }
 
     private def getPackageName() {
-        getPackageName().split('\\.').last()
+        getFullyQualifiedPackageName().split('\\.').last()
     }
 
     @OutputFile
@@ -64,7 +64,7 @@ class ConvertJavacardTask extends DefaultTask {
 
         ant.convert(CAP: true,
                     EXP: true,
-                    packagename: getPackageName(),
+                    packagename: getFullyQualifiedPackageName(),
                     packageaid: getAid(),
                     majorminorversion: getVersion(),
                     debug: true,
@@ -73,8 +73,8 @@ class ConvertJavacardTask extends DefaultTask {
                     exportpath: "${javacardHome}/api_export_files",
                     classpath: project.configurations.javacardTools.asPath) {
 
-            getApplets().each() { emAid, fqImplementorClass ->
-                AppletNameAID(appletname: fqImplementorClass, aid: emAid )
+            getApplets().each() { aid, className ->
+                AppletNameAID(appletname: "${getFullyQualifiedPackageName()}.${className}" , aid: aid )
             }
         }
     }
