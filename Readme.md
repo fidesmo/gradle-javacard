@@ -10,7 +10,8 @@ Features
 --------
 
   - convert a package of class files into a cap file
-  - specify multiple classes implementing Applet for later installation  
+  - specify multiple classes implementing Applet for later installation
+  - add external EXP files to build
 
 Usage
 -----
@@ -30,7 +31,7 @@ Include the new version of the plugin from OSS Sonatype snapshot, by adding the 
         dependencies {
             classpath 'com.fidesmo.gradle:javacard:0.2-SNAPSHOT'
         }
-    }
+    }   
 
     javacard {
         cap {
@@ -53,3 +54,12 @@ The specified package is converted from jvm byte code to javaCard byte code, by 
 
      export JC_HOME='path/to/javaCardSdk'
      gradle convertJavacard
+
+To add external exp files to your build, add a dependencies section to your gradle.build and add the
+according paths to the javacardExport configuration.
+
+
+     dependencies {
+         javacardExport file('../path/to/exp/files/dir')
+     }
+

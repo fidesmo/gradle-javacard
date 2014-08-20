@@ -70,7 +70,7 @@ class ConvertJavacardTask extends DefaultTask {
                     debug: true,
                     classdir: project.sourceSets.main.output.classesDir,
                     outputdirectory: new File(project.getBuildDir(), 'javacard'),
-                    exportpath: "${javacardHome}/api_export_files",
+                    exportpath: project.configurations.javacardExport.asPath,
                     classpath: project.configurations.javacardTools.asPath) {
 
             getApplets().each() { aid, className ->

@@ -52,6 +52,7 @@ class JavacardPlugin implements Plugin<Project> {
 
         project.configurations {
             javacardTools
+            javacardExport
         }
 
         project.dependencies {
@@ -59,6 +60,10 @@ class JavacardPlugin implements Plugin<Project> {
             javacardTools project.files("${javacardHome}/lib/converter.jar")
             javacardTools project.files("${javacardHome}/lib/offcardverifier.jar")
             compile project.files("${javacardHome}/lib/api.jar")
+        }
+
+        project.dependencies {
+            javacardExport project.files("${javacardHome}/api_export_files")
         }
 
         addConvertTask(project, jcExtension)
