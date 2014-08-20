@@ -36,6 +36,10 @@ class JavacardExtension {
                 throw new InvalidUserDataException('Invalid aid for CAP')
             }
         }
+
+        def getHexString() {
+            string.split(':').collect { it.replaceFirst('0x', '').padLeft(2, '0') }.join('')
+        }
     }
 
     static class Cap {
