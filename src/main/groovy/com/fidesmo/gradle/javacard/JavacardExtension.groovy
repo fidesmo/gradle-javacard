@@ -102,11 +102,15 @@ class JavacardExtension {
     Cap cap;
 
     Cap cap(Closure closure) {
-        cap = new Cap()
-        closure.delegate = cap
-        closure.resolveStrategy = Closure.DELEGATE_FIRST
-        closure.call()
-        return cap
+        if (!cap) {
+            cap = new Cap()
+            closure.delegate = cap
+            closure.resolveStrategy = Closure.DELEGATE_FIRST
+            closure.call()
+            return cap
+        } else {
+            throw new InvalidUserDataException('Currently each project can only contain one cap file')
+        }
     }
 
     def validate() {

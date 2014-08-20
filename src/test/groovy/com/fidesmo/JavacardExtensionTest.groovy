@@ -103,6 +103,16 @@ class JavacardExtensionTest {
         ext.validate()
     }
 
+    @Test(expected = InvalidUserDataException)
+    void allowOnlyOneCapFile() {
+        ext.cap {
+            aid = '0x01:0x02:0x03:0x04:0x05'
+            packageName = 'org.example.javacard.test'
+            version = '1.0'
+        }
+    }
+
+
     @Test void aidReturnsHexString() {
         def hexStr = new JavacardExtension.Aid('0x01:0x23:0x3:0x0').hexString
         assertThat(hexStr, equalTo('01230300'))
