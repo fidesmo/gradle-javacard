@@ -2,3 +2,10 @@ language: groovy
 jdk:
   - openjdk7
 script: ./gradlew test
+env:
+  global:
+  - secure: "C1hIZ3ErcYToCGjOXs+FIdIk2PcwoVKWSEb9sR9lPwM35ooMAxeGmGy7SBjg3zgZqOeaDTx8pUdbyd7nDndIJxs2hH96sPhWbdeYH99oN3EkSZzpOztH+hdv9/Ftft25nah0euvRwJa55jf1RuI3wAfWmGVz4l5IESFtNegGFMQ="
+  - secure: "F7MnM2BHLNn44shLN9K/OF6GMEOjYp/g3GViNAXGiiNMyHXpRnOfYwoPktefvbSIUQ4rSkJ51W51XcODd6CdjlAJKDM1cHDxZTxbzArwaDB2c/g0GNf8NEJ3VoFN4SyLWiJYkmfDA5h/VLPjgMen5KyNQuy556XyJkcU8uGAjBQ="
+after_success:
+  - ! '[[ $TRAVIS_BRANCH =~ ^(v[0-9]+\.[0-9]+\.[0-9]+|master)$ && $TRAVIS_PULL_REQUEST
+    = false ]] && ./gradlew uploadArchives'
