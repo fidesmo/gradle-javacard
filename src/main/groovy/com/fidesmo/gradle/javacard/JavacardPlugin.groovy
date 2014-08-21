@@ -52,6 +52,7 @@ class JavacardPlugin implements Plugin<Project> {
 
         project.configurations {
             javacardTools
+            javacardExport
         }
 
         project.dependencies {
@@ -59,6 +60,10 @@ class JavacardPlugin implements Plugin<Project> {
             javacardTools project.files("${javacardHome}/lib/converter.jar")
             javacardTools project.files("${javacardHome}/lib/offcardverifier.jar")
             compile project.files("${javacardHome}/lib/api.jar")
+        }
+
+        project.dependencies {
+            javacardExport project.files("${javacardHome}/api_export_files")
         }
 
         addConvertTask(project, jcExtension)
@@ -75,9 +80,9 @@ class JavacardPlugin implements Plugin<Project> {
             dependsOn(project.compileJava)
         }
 
-        convert.conventionMapping.aid = { jcExtension.aid }
-        convert.conventionMapping.packagePath = { jcExtension.sourcePackage }
-        convert.conventionMapping.version = { jcExtension.version }
-        convert.conventionMapping.executableModules = { jcExtension.applets }
+        convert.conventionMapping.aid = { jcExtension.cap.aid.string }
+        convert.conventionMapping.fullyQualifiedPackageName = { jcExtension.cap.packageName }
+        convert.conventionMapping.version = { jcExtension.cap.version }
+        convert.conventionMapping.applets = { jcExtension.cap.applets.collectEntries{[(it.aid.string): it.className]}}
     }
 }

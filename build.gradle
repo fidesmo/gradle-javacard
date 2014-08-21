@@ -1,6 +1,10 @@
 apply plugin: 'groovy'
+apply plugin: 'maven'
 apply plugin: 'release'
-apply plugin: 'nexus'
+
+configurations {
+    mavenDeploy
+}
 
 repositories {
     mavenCentral()
@@ -11,52 +15,58 @@ dependencies {
     compile localGroovy()
     testCompile 'junit:junit:4.11'
     testCompile 'org.hamcrest:hamcrest-all:1.3'
+    mavenDeploy 'org.kuali.maven.wagons:maven-s3-wagon:1.2.1'
 }
 
 buildscript {
    repositories {
       mavenCentral()
-      jcenter()
    }
    dependencies {
       classpath 'com.github.townsfolk:gradle-release:1.2'
-      classpath 'org.gradle.api.plugins:gradle-nexus-plugin:0.7.1'
    }
 }
 
 
 group 'com.fidesmo'
 
-modifyPom {
-    project {
-        name 'Gradle javacard plugin'
-        description 'Gradle plugin that converts classes to java card applets'
-        url 'https://github.com/fidesmo/gradle-javacard'
-        inceptionYear '2014'
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            uniqueVersion = false
+            configuration = configurations.mavenDeploy
+            repository(url: "s3://${version.endsWith('-SNAPSHOT') ? 'snapshots' : 'releases'}.marmeladburk.fidesmo.com")
+            pom.project {
+                name 'Gradle javacard plugin'
+                description 'Gradle plugin that converts classes to java card applets'
+                url 'https://github.com/fidesmo/gradle-javacard'
+                inceptionYear '2014'
 
-        artifactId 'gradle-javacard'
+                artifactId 'gradle-javacard'
 
-        scm {
-            url 'https://github.com/fidesmo/gradle-javacard'
-            connection 'scm:https://github.com/fidesmo/gradle-javacard'
-            developerConnection 'scm:git@github.com:fidesmo/gradle-javacard.git'
-        }
+                scm {
+                    url 'https://github.com/fidesmo/gradle-javacard'
+                    connection 'scm:https://github.com/fidesmo/gradle-javacard'
+                    developerConnection 'scm:git@github.com:fidesmo/gradle-javacard.git'
+                }
 
-        licenses {
-            license {
-                name 'The Apache Software License, Version 2.0'
-                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                distribution 'repo'
-            }
-        }
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution 'repo'
+                    }
+                }
 
-        developers {
-            developer {
-                id 'yves'
-                name 'Yves Müller'
-                email 'yves.mueller@fidesmo.com'
-                organization 'Fidesmo AB'
-                organizationUrl 'http://fidesmo.com'
+                developers {
+                    developer {
+                        id 'yves'
+                        name 'Yves Müller'
+                        email 'yves.mueller@fidesmo.com'
+                        organization 'Fidesmo AB'
+                        organizationUrl 'http://fidesmo.com'
+                    }
+                }
             }
         }
     }

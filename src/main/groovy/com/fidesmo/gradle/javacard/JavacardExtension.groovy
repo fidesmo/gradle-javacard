@@ -23,33 +23,97 @@ class JavacardExtension {
 
     static final String NAME = "javacard"
 
-    String aid
-    String sourcePackage
-    Map<String, String> applets
-    String version
+    static class Aid {
+
+        String string
+
+        def Aid(String aidStr) {
+            string = aidStr
+        }
+
+        def validate() {
+            if (!string.matches('^(0x[0-9A-Fa-f]{1,2}(:|$)){5,16}')) {
+                throw new InvalidUserDataException('Invalid aid for CAP')
+            }
+        }
+
+        def getHexString() {
+            string.split(':').collect { it.replaceFirst('0x', '').padLeft(2, '0') }.join('')
+        }
+    }
+
+    static class Cap {
+        static class Applet {
+            Aid aid
+            String className
+
+            def setAid(String aidStr) {
+                aid = new Aid(aidStr)
+            }
+
+            def validate() {
+                aid.validate()
+
+                if(!className.matches('^[a-zA-Z_]\\w*$')) {
+                    throw new InvalidUserDataException("Invalid class name '${className}'")
+                }
+            }
+        }
+
+        Aid aid
+        String packageName
+        List<Applet> applets = []
+        String version
+
+        Applet applet(Closure closure) {
+            def newApplet = new Applet()
+            closure.delegate = newApplet
+            closure.resolveStrategy = Closure.DELEGATE_FIRST
+            closure.call()
+            applets.add(newApplet)
+            newApplet
+        }
+
+        def setAid(String aidStr) {
+            aid = new Aid(aidStr)
+        }
+
+        def validate() {
+            aid.validate()
+
+            if(!version.matches('^\\d+\\.\\d+$')) {
+                throw new InvalidUserDataException('Invalid version format for CAP')
+            }
+
+            if(!packageName.matches('^([a-zA-Z_]\\w*(\\.|$))+')) {
+                throw new InvalidUserDataException('Invalid sourcePackage name for CAP')
+            }
+
+            if(applets.size() == 0) {
+                throw new InvalidUserDataException('At least on applet should be specified')
+            }
+
+            applets.each { applet ->
+                applet.validate()
+            }
+        }
+    }
+
+    Cap cap;
+
+    Cap cap(Closure closure) {
+        if (!cap) {
+            cap = new Cap()
+            closure.delegate = cap
+            closure.resolveStrategy = Closure.DELEGATE_FIRST
+            closure.call()
+            return cap
+        } else {
+            throw new InvalidUserDataException('Currently each project can only contain one cap file')
+        }
+    }
 
     def validate() {
-        String aidRegEx = '^(0x[0-9A-Fa-f]{1,2}(:|$)){5,16}'
-        if (!aid.matches(aidRegEx)) {
-            throw new InvalidUserDataException('Invalid aid for CAP')
-        }
-
-        if(!sourcePackage.matches('^([a-zA-Z_]\\w*(\\.|$))+')) {
-            throw new InvalidUserDataException('Invalid sourcePackage name for CAP')
-        }
-
-        if(!version.matches('^\\d+\\.\\d+$')) {
-            throw new InvalidUserDataException('Invalid version format for CAP')
-        }
-
-        applets.each { aid, className ->
-            if(!aid.matches(aidRegEx)) {
-                throw new InvalidUserDataException("Invalid aid for applet '${className}'")
-            }
-
-            if(!className.matches('^[a-zA-Z_]\\w*$')) {
-                throw new InvalidUserDataException("Invalid class name '${className}'")
-            }
-        }
+        cap.validate()
     }
 }
