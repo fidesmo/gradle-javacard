@@ -31,7 +31,7 @@ Include the new version of the plugin from OSS Sonatype snapshot, by adding the 
         dependencies {
             classpath 'com.fidesmo.gradle:javacard:0.2-SNAPSHOT'
         }
-    }   
+    }
 
     javacard {
         cap {
@@ -62,4 +62,3 @@ according paths to the javacardExport configuration.
      dependencies {
          javacardExport file('../path/to/exp/files/dir')
      }
-
