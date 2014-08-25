@@ -1,6 +1,6 @@
 language: groovy
 jdk:
-  - openjdk7
+  - openjdk6
 script: ./gradlew test
 env:
   global:
