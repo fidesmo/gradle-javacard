@@ -80,6 +80,8 @@ class JavacardPlugin implements Plugin<Project> {
             dependsOn(project.compileJava)
         }
 
+        project.build.dependsOn(convert)
+
         convert.conventionMapping.aid = { jcExtension.cap.aid.string }
         convert.conventionMapping.fullyQualifiedPackageName = { jcExtension.cap.packageName }
         convert.conventionMapping.version = { jcExtension.cap.version }

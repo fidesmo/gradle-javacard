@@ -76,6 +76,10 @@ class JavacardPluginTest {
         assertThat(task.dependsOn, hasItem(project.compileJava))
     }
 
+    @Test void checkDependsSetup() {
+        assertThat(project.build.dependsOn, hasItem(project.convertJavacard))
+    }
+
     @Test void copyExtensionValuesToTask() {
         project.configure(project.javacard) {
             cap {
