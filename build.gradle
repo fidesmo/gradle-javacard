@@ -2,6 +2,8 @@ apply plugin: 'groovy'
 apply plugin: 'maven'
 apply plugin: 'release'
 
+sourceCompatibility = '1.6'
+
 configurations {
     mavenDeploy
 }
