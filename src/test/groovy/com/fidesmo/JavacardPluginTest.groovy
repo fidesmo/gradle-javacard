@@ -43,6 +43,7 @@ class JavacardPluginTest {
         project.apply plugin: 'javacard'
     }
 
+
     @Test void checkJavacardHomeSetup() {
         def plugin = project.getPlugins().findPlugin('javacard')
         assertThat(plugin.javacardHome, equalTo('.'))
@@ -65,6 +66,12 @@ class JavacardPluginTest {
         assertTrue(configuration.contains(project.file('lib/api.jar')))
     }
 
+    @Test void checkCompaibilityForJavaCompile() {
+        def task = project.getTasks().findByPath('compileJava')
+        assertThat(task.sourceCompatibility, equalTo('1.2'))
+        assertThat(task.targetCompatibility, equalTo('1.2'))
+    }
+
     @Test void appliesTheJavaPluginToTheProject() {
         assertTrue(project.getPlugins().hasPlugin(JavaPlugin))
     }
@@ -85,12 +92,12 @@ class JavacardPluginTest {
             cap {
                 aid = '0x01:0x02:0x03:0x04:0x05'
                 packageName = 'org.example.javacard.test'
-                
+
                 applet {
                     aid = '0x01:0x02:0x03:0x04:0x05:0x01'
                     className = 'Applet'
                 }
-                
+
                 version = '1.0'
             }
         }

@@ -41,8 +41,10 @@ class JavacardPlugin implements Plugin<Project> {
         }
 
         // configure java build
-        project.sourceCompatibility = '1.2'
-        project.targetCompatibility = '1.2'
+        project.compileJava {
+            sourceCompatibility = '1.2'
+            targetCompatibility = '1.2'
+        }
 
         // FIXME: support multiple packages
         def jcExtension = project.extensions.create(JavacardExtension.NAME, JavacardExtension)
