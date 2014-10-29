@@ -40,6 +40,10 @@ class JavacardExtension {
         def getHexString() {
             string.split(':').collect { it.replaceFirst('0x', '').padLeft(2, '0') }.join('')
         }
+
+        String toString() {
+            "Aid(${string})"
+        }
     }
 
     static class Cap {

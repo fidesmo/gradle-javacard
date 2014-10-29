@@ -117,4 +117,9 @@ class JavacardExtensionTest {
         def hexStr = new JavacardExtension.Aid('0x01:0x23:0x3:0x0').hexString
         assertThat(hexStr, equalTo('01230300'))
     }
+
+    @Test void aidIsPrintables() {
+        def str = new JavacardExtension.Aid('0x01:0x23:0x3:0x0').toString()
+        assertThat(str, equalTo('Aid(0x01:0x23:0x3:0x0)'))
+    }
 }
