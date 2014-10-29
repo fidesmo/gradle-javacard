@@ -35,17 +35,17 @@ class JavacardExtensionTest {
             cap {
                 aid = '0x01:0x02:0x03:0x04:0x05'
                 packageName = 'org.example.javacard.test'
-                
+
                 applet {
                     aid = '0x01:0x02:0x03:0x04:0x05:0x01'
                     className = 'Applet'
                 }
-                
+
                 applet {
                     aid = '0x01:0x02:0x03:0x04:0x05:0x02'
                     className = 'Applet2'
                 }
-                
+
                 version = '1.0'
             }
         }
@@ -66,7 +66,7 @@ class JavacardExtensionTest {
         ext.cap.aid= 'sdasdasdasd'
         ext.validate()
     }
-   
+
     @Test(expected = InvalidUserDataException)
     void rejectsToShortAids() {
         ext.cap.aid = '0x01:0x02:0x03:0x04'
