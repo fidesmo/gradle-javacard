@@ -26,15 +26,20 @@ import com.fidesmo.gradle.javacard.ConvertJavacardTask
 
 class JavacardPlugin implements Plugin<Project> {
 
-    def javacardHome = System.env['JC_HOME']
-
-    void apply(Project project) {
+    static def getJavacardHome(Project project) {
+        def javacardHome = System.env['JC_HOME']
 
         if (!javacardHome) {
             throw new InvalidUserDataException('JC_HOME must be set in order to use javacard plugin')
         } else if(! project.file(javacardHome).isDirectory()) {
             throw new InvalidUserDataException('JC_HOME must point to a valid directory')
         }
+
+        javacardHome
+    }
+
+
+    void apply(Project project) {
 
         if (!project.plugins.hasPlugin(JavaPlugin)) {
             project.plugins.apply(JavaPlugin)
@@ -49,23 +54,35 @@ class JavacardPlugin implements Plugin<Project> {
         // FIXME: support multiple packages
         def jcExtension = project.extensions.create(JavacardExtension.NAME, JavacardExtension)
         project.afterEvaluate {
+            // validate extension
             jcExtension.validate()
-        }
+       }
 
         project.configurations {
-            javacardTools
-            javacardExport
+            javacardTools {
+                visible = false
+            }
+            javacardExport {
+                visible = false
+            }
         }
 
-        project.dependencies {
-            javacardTools project.files("${javacardHome}/ant-tasks/lib/jctasks.jar")
-            javacardTools project.files("${javacardHome}/lib/converter.jar")
-            javacardTools project.files("${javacardHome}/lib/offcardverifier.jar")
-            compile project.files("${javacardHome}/lib/api.jar")
-        }
+        // check if JC_HOME is not set add jcardsim from maven central
+        // this is used to run tests and compile if no javacard sdk is available (e.g ci systems)
+        if (!System.env['JC_HOME']) {
+            project.logger.info("Using jcardsim as replacement for JC_HOME/lib/api.jar, due to missing JC_HOME.")
 
-        project.dependencies {
-            javacardExport project.files("${javacardHome}/api_export_files")
+            project.repositories {
+                mavenCentral()
+            }
+
+            project.dependencies {
+                compile 'com.licel:jcardsim:2.2.2'
+            }
+        } else {
+            project.dependencies {
+                compile project.files("${getJavacardHome(project)}/lib/api.jar")
+            }
         }
 
         addConvertTask(project, jcExtension)
@@ -74,7 +91,7 @@ class JavacardPlugin implements Plugin<Project> {
 
     private def addConvertTask(Project project, JavacardExtension jcExtension) {
 
-        def convert = project.getTasks().create("convertJavacard", ConvertJavacardTask)
+        def convert = project.tasks.create("convertJavacard", ConvertJavacardTask)
 
         convert.configure {
             group = 'build'
