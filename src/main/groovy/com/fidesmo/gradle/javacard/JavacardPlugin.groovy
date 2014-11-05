@@ -54,6 +54,35 @@ class JavacardPlugin implements Plugin<Project> {
         // FIXME: support multiple packages
         def jcExtension = project.extensions.create(JavacardExtension.NAME, JavacardExtension)
         project.afterEvaluate {
+
+            def jcardsim = project.configurations.getByName('testCompile').dependencies.find {
+                it.name == 'jcardsim'
+            }
+
+            // check if JC_HOME is not set and if jcardsim was available and in that case use jcardsim api
+            // this is used to run tests and compile if no javacard sdk is available (e.g ci systems)
+            if (jcardsim != null && System.env['JC_HOME'] == null) {
+                project.logger.info('Using jcardsim as replacement for JC_HOME/lib/api.jar, due to missing JC_HOME.')
+                project.dependencies {
+                    compile "com.licel:jcardsim:${jcardsim.version}"
+                }
+            } else {
+                def apiJar = "${getJavacardHome(project)}/lib/api.jar"
+
+                project.dependencies {
+                    compile project.files(apiJar)
+                }
+
+                if (jcardsim != null) {
+                    project.sourceSets {
+                        test {
+                            runtimeClasspath -= project.files(apiJar)
+                        }
+                    }
+                }
+            }
+
+
             // validate extension
             jcExtension.validate()
        }
@@ -64,24 +93,6 @@ class JavacardPlugin implements Plugin<Project> {
             }
             javacardExport {
                 visible = false
-            }
-        }
-
-        // check if JC_HOME is not set add jcardsim from maven central
-        // this is used to run tests and compile if no javacard sdk is available (e.g ci systems)
-        if (!System.env['JC_HOME']) {
-            project.logger.info("Using jcardsim as replacement for JC_HOME/lib/api.jar, due to missing JC_HOME.")
-
-            project.repositories {
-                mavenCentral()
-            }
-
-            project.dependencies {
-                compile 'com.licel:jcardsim:2.2.2'
-            }
-        } else {
-            project.dependencies {
-                compile project.files("${getJavacardHome(project)}/lib/api.jar")
             }
         }
 
