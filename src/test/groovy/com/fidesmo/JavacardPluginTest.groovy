@@ -49,11 +49,6 @@ class JavacardPluginTest {
         assertThat(plugin.getJavacardHome(project), equalTo('.'))
     }
 
-    @Test void checkCompileConfiguration() {
-        def configuration = project.getConfigurations().getByName('compile')
-        assertTrue(configuration.contains(project.file('lib/api.jar')))
-    }
-
     @Test void checkCompaibilityForJavaCompile() {
         def task = project.getTasks().findByPath('compileJava')
         assertThat(task.sourceCompatibility, equalTo('1.2'))
