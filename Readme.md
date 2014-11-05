@@ -12,6 +12,7 @@ Features
   - convert a package of class files into a cap file
   - specify multiple classes implementing Applet for later installation
   - add external EXP files to build
+  - optional support for testing with [jcardsim](http://jcardsim.org)
 
 Usage
 -----
@@ -71,7 +72,29 @@ The specified package is converted from jvm byte code to javaCard byte code, by 
 To add external exp files to your build, add a dependencies section to your gradle.build and add the
 corresponding paths to the javacardExport configuration.
 
-
      dependencies {
          javacardExport file('../path/to/exp/files/dir')
      }
+
+
+The java card plugin doesn't include a testing framework, but it contains several mechanisms to make
+testing with jcardsim easier. To properly setup testing with jcardsim you have to add the central
+maven repositories to your build.gradle and configure the testCompile configuration to include
+jcardsim in the version you want.
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        testCompile 'com.licel:jcardsim:2.2.2'
+    }
+
+
+If you follow the above the plugin will filter the runtime classpath of the test source set (usually
+the classes you have under /src/test). The aim is to remove the lib/api.jar from the javacard sdk in
+order to prevent clashes between the official javacard api and one provided by jcardsim.
+
+In case you want to run the build and the test one a continuous integration system, you can do so
+without providing a javacard sdk. If no sdk is detected but jcardsim has been added the plugin
+compiles you applet against the javacard api provided by jcardsim.
