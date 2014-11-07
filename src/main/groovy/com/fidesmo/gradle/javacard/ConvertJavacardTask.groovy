@@ -30,7 +30,11 @@ class ConvertJavacardTask extends DefaultTask {
     @Input String version
     @Input Map<String, String> applets
 
-    def javacardHome = System.env.JC_HOME
+    String getJavacardHome() {
+        JavacardPlugin.getJavacardHome(project)
+    }
+
+
     def javacardDirectory = new File(project.getBuildDir(), 'javacard')
 
     private def getPackageFilepath() {
@@ -58,6 +62,14 @@ class ConvertJavacardTask extends DefaultTask {
 
     @TaskAction
     def convert() {
+
+        project.dependencies {
+            javacardTools project.files("${getJavacardHome()}/ant-tasks/lib/jctasks.jar")
+            javacardTools project.files("${getJavacardHome()}/lib/converter.jar")
+            javacardTools project.files("${getJavacardHome()}/lib/offcardverifier.jar")
+            javacardExport project.files("${getJavacardHome()}/api_export_files")
+        }
+
         ant.taskdef(name: 'convert',
                     classname: 'com.sun.javacard.ant.tasks.ConverterTask',
                     classpath: project.configurations.javacardTools.asPath)
