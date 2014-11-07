@@ -1,10 +1,10 @@
-Compling javacard applets with gradle
+Compiling javacard applets with gradle
 -------------------------------------
 
 [![Build Status](https://travis-ci.org/fidesmo/gradle-javacard.svg?branch=master)](https://travis-ci.org/fidesmo/gradle-javacard)
 
-This plugins allows to translate compiled class files to the converted archive format. These files
-can be used for installation on smart and sim card supporting SUN/Oracel JavaCard Technology.
+This plugins allows for translation of compiled class files to the converted archive format. These files
+can be used for installation on smart and sim cards supporting SUN/Oracle JavaCard Technology.
 
 Features
 --------
@@ -16,20 +16,18 @@ Features
 Usage
 -----
 
-Include the new version of the plugin from OSS Sonatype snapshot, by adding the following to your
+Include the new version of the plugin from OSS Sonatype snapshot by adding the following to your
 `build.gradle`:
 
     apply plugin: 'javacard'
 
     buildscript {
         repositories {
-            maven {
-                url 'https://oss.sonatype.org/content/repositories/snapshots/'
-            }
+            maven { url 'http://releases.marmeladburk.fidesmo.com/' }
         }
 
         dependencies {
-            classpath 'com.fidesmo.gradle:javacard:0.2-SNAPSHOT'
+            classpath 'com.fidesmo.gradle:javacard:0.2.3'
         }
     }
 
@@ -45,18 +43,33 @@ Include the new version of the plugin from OSS Sonatype snapshot, by adding the 
          }
      }
 
-Before running the compilation you need to download the JavaCard SDK. The current implementation is
-tested using Linux and the `Java Card Development Kit 2.2.2`. It is supposed the to work also for
-the all other `Java Card Development Kit 2.x.x` under MacOSx, Windows and Linux.
+
+### Installing the Java Card Development Kit
+
+Before compiling you need to download the JavaCard SDK. The current implementation is tested using
+Linux and the `Java Card Development Kit 2.2.2`. It is supposed to work also for all other `Java
+Card Development Kit 2.x.x` under MacOSx, Windows and Linux. **Attention:** The 3.x.x version of the
+JCDK is not yet supported. The development kit can be downloaded on the Oracle
+[Website](https://www.oracle.com/technetwork/java/embedded/javacard/downloads/javacard-sdk-2043229.html)
+and must be unpacked
+
+     # Assumes file to be downloaded as java_card_kit-2_2_2-linux.zip
+     unzip java_card_kit-2_2_2-linux.zip
+     cd java_card_kit-2_2_2/
+     unzip java_card_kit-2_2_2-rr-bin-linux-do.zip
+     unzip java_card_kit-2_2_2-rr-ant-tasks.zip
+     export JC_HOME="${PWD}/java_card_kit-2_2_2"
+
+### Convert applications to Java Card
 
 The specified package is converted from jvm byte code to javaCard byte code, by running the
 `convertJavaCard` task.
 
-     export JC_HOME='path/to/javaCardSdk'
+     # ensure JC_HOME is set correctly
      gradle convertJavacard
 
 To add external exp files to your build, add a dependencies section to your gradle.build and add the
-according paths to the javacardExport configuration.
+corresponding paths to the javacardExport configuration.
 
 
      dependencies {
