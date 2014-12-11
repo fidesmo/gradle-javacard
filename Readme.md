@@ -69,13 +69,19 @@ The specified package is converted from jvm byte code to javaCard byte code, by 
      # ensure JC_HOME is set correctly
      gradle convertJavacard
 
+### Add exp files from vendors or other projects
+
 To add external exp files to your build, add a dependencies section to your gradle.build and add the
-corresponding paths to the javacardExport configuration.
+corresponding paths to the javacardExport configuration. Usually you also will need to add some
+classes in order to compile your java code to class files.
 
      dependencies {
-         javacardExport file('../path/to/exp/files/dir')
+         compile files('../path/to/class/files/dir')
+         javacardExport files('../path/to/exp/files/dir')
      }
 
+
+### Support for testing with jcardsim
 
 The java card plugin doesn't include a testing framework, but it contains several mechanisms to make
 testing with jcardsim easier. To properly setup testing with jcardsim you have to add the central
@@ -95,6 +101,10 @@ If you follow the above the plugin will filter the runtime classpath of the test
 the classes you have under /src/test). The aim is to remove the lib/api.jar from the javacard sdk in
 order to prevent clashes between the official javacard api and one provided by jcardsim.
 
+### Building without javacard sdk
+
 In case you want to run the build and the test one a continuous integration system, you can do so
 without providing a javacard sdk. If no sdk is detected but jcardsim has been added the plugin
 compiles you applet against the javacard api provided by jcardsim.
+
+Converting the java code to java card applet is not supported without javacard sdk.
