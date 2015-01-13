@@ -28,7 +28,7 @@ Include the new version of the plugin from OSS Sonatype snapshot by adding the f
         }
 
         dependencies {
-            classpath 'com.fidesmo.gradle:javacard:0.2.3'
+            classpath 'com.fidesmo:gradle-javacard:0.2.4'
         }
     }
 
