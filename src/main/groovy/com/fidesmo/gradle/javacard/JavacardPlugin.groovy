@@ -107,7 +107,7 @@ class JavacardPlugin implements Plugin<Project> {
         convert.configure {
             group = 'build'
             description = 'Create a CAP file for installation on a smart card'
-            dependsOn(project.compileJava)
+            dependsOn(project.classes)
         }
 
         project.build.dependsOn(convert)

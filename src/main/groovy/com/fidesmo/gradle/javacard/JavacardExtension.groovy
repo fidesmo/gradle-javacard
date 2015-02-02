@@ -93,10 +93,6 @@ class JavacardExtension {
                 throw new InvalidUserDataException('Invalid sourcePackage name for CAP')
             }
 
-            if(applets.size() == 0) {
-                throw new InvalidUserDataException('At least on applet should be specified')
-            }
-
             applets.each { applet ->
                 applet.validate()
             }

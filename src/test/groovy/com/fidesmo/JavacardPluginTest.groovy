@@ -63,7 +63,7 @@ class JavacardPluginTest {
         def task = project.getTasks().findByPath('convertJavacard')
         assertThat(task, instanceOf(ConvertJavacardTask))
         assertThat(task.group, equalTo('build'))
-        assertThat(task.dependsOn, hasItem(project.compileJava))
+        assertThat(task.dependsOn, hasItem(project.classes))
     }
 
     @Test void checkDependsSetup() {
