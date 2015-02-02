@@ -57,6 +57,6 @@ class ConvertJavacardTaskTest {
 
     @Test void outputs() {
         assertThat(task.getCapFile().path, equalTo(project.file('build/javacard/org/example/javacard/test/javacard/test.cap').path))
-        assertThat(task.getExtFile().path, equalTo(project.file('build/javacard/org/example/javacard/test/javacard/test.ext').path))
+        assertThat(task.getExpFile().path, equalTo(project.file('build/javacard/org/example/javacard/test/javacard/test.exp').path))
     }
 }

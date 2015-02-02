@@ -51,8 +51,8 @@ class ConvertJavacardTask extends DefaultTask {
     }
 
     @OutputFile
-    def getExtFile() {
-        new File(javacardDirectory, "${getPackageFilepath()}/javacard/${getPackageName()}.ext")
+    def getExpFile() {
+        new File(javacardDirectory, "${getPackageFilepath()}/javacard/${getPackageName()}.exp")
     }
 
     @InputDirectory
