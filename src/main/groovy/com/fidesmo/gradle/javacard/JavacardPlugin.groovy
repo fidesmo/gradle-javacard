@@ -67,7 +67,12 @@ class JavacardPlugin implements Plugin<Project> {
                     compile "com.licel:jcardsim:${jcardsim.version}"
                 }
             } else {
-                def apiJar = "${getJavacardHome(project)}/lib/api.jar"
+
+                if (jcExtension ==~ /3.0.[0-4]) {
+                    def apiJar = "${getJavacardHome(project)}/lib/api_classic.jar"
+                } else {
+                    def apiJar = "${getJavacardHome(project)}/lib/api.jar"
+                }
 
                 project.dependencies {
                     compile project.files(apiJar)
