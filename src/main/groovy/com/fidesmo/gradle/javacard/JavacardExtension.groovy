@@ -101,7 +101,7 @@ class JavacardExtension {
 
     Cap cap;
 
-    String javacardVersion = "2.2.2"
+    String sdkVersion = "2.2.2"
 
     Cap cap(Closure closure) {
         if (!cap) {
@@ -116,8 +116,8 @@ class JavacardExtension {
     }
 
     def validate() {
-        if (javacardVersion ==~ /2.2.[0-2]/ ||
-            javacardVersion ==~ /3.0.[0-4]/ ) {
+        if (!sdkVersion.matches("2.2.[0-2]") &&
+            !sdkVersion.matches("3.0.[0-4]")) {
             throw new InvalidUserDataException('Unsupported java card version (only 2.2.? and 3.0.?)')
         }
 

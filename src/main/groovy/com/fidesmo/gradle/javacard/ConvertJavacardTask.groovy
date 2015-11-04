@@ -29,6 +29,7 @@ class ConvertJavacardTask extends DefaultTask {
     @Input String fullyQualifiedPackageName
     @Input String version
     @Input Map<String, String> applets
+    @Input String sdkVersion
 
     String getJavacardHome() {
         JavacardPlugin.getJavacardHome(project)
@@ -62,11 +63,16 @@ class ConvertJavacardTask extends DefaultTask {
 
     @TaskAction
     def convert() {
-
         project.dependencies {
-            javacardTools project.files("${getJavacardHome()}/ant-tasks/lib/jctasks.jar")
-            javacardTools project.files("${getJavacardHome()}/lib/converter.jar")
-            javacardTools project.files("${getJavacardHome()}/lib/offcardverifier.jar")
+            if (sdkVersion ==~ /3.0.[0-4]/) {
+                javacardTools project.files("${getJavacardHome()}/lib/jctasks.jar")
+                javacardTools project.files("${getJavacardHome()}/lib/tools.jar")
+            } else {
+                javacardTools project.files("${getJavacardHome()}/ant-tasks/lib/jctasks.jar")
+                javacardTools project.files("${getJavacardHome()}/lib/converter.jar")
+                javacardTools project.files("${getJavacardHome()}/lib/offcardverifier.jar")
+            }
+
             javacardExport project.files("${getJavacardHome()}/api_export_files")
         }
 

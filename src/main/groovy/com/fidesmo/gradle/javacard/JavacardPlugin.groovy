@@ -68,10 +68,11 @@ class JavacardPlugin implements Plugin<Project> {
                 }
             } else {
 
-                if (jcExtension ==~ /3.0.[0-4]) {
-                    def apiJar = "${getJavacardHome(project)}/lib/api_classic.jar"
+                def apiJar = ""
+                if (jcExtension.sdkVersion.matches("3.0.[0-4]")) {
+                    apiJar = "${getJavacardHome(project)}/lib/api_classic.jar"
                 } else {
-                    def apiJar = "${getJavacardHome(project)}/lib/api.jar"
+                    apiJar = "${getJavacardHome(project)}/lib/api.jar"
                 }
 
                 project.dependencies {
@@ -121,5 +122,6 @@ class JavacardPlugin implements Plugin<Project> {
         convert.conventionMapping.fullyQualifiedPackageName = { jcExtension.cap.packageName }
         convert.conventionMapping.version = { jcExtension.cap.version }
         convert.conventionMapping.applets = { jcExtension.cap.applets.collectEntries{[(it.aid.string): it.className]}}
+        convert.conventionMapping.sdkVersion = { jcExtension.sdkVersion }
     }
 }
