@@ -23,6 +23,10 @@ Include the new version of the plugin from OSS Sonatype snapshot by adding the f
     apply plugin: 'javacard'
 
     buildscript {
+        /* Specify which version of the JavaCard SDK should be used
+           to build this project */
+        sdkVersion = "3.0.4"
+
         repositories {
             maven { url 'http://releases.marmeladburk.fidesmo.com/' }
         }

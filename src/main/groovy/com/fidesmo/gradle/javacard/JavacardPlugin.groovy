@@ -67,7 +67,13 @@ class JavacardPlugin implements Plugin<Project> {
                     compile "com.licel:jcardsim:${jcardsim.version}"
                 }
             } else {
-                def apiJar = "${getJavacardHome(project)}/lib/api.jar"
+
+                def apiJar = ""
+                if (jcExtension.sdkVersion.matches("3.0.[0-4]")) {
+                    apiJar = "${getJavacardHome(project)}/lib/api_classic.jar"
+                } else {
+                    apiJar = "${getJavacardHome(project)}/lib/api.jar"
+                }
 
                 project.dependencies {
                     compile project.files(apiJar)
@@ -116,5 +122,6 @@ class JavacardPlugin implements Plugin<Project> {
         convert.conventionMapping.fullyQualifiedPackageName = { jcExtension.cap.packageName }
         convert.conventionMapping.version = { jcExtension.cap.version }
         convert.conventionMapping.applets = { jcExtension.cap.applets.collectEntries{[(it.aid.string): it.className]}}
+        convert.conventionMapping.sdkVersion = { jcExtension.sdkVersion }
     }
 }
