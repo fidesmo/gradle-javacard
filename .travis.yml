@@ -8,4 +8,4 @@ env:
   - secure: "Hhn03e/epta72wSK7gmIWKDmnq+J2pVLgomIfwC9Fc+KiRiH1EO4R62mROVTRJYDLHqY2uDTxE88I2vYruOWuFyQ49Kw6UqA/x8s7YgDN4a7Jw9bCbe3DaNFDJSlv7r5KdRJl4t2mSYX+dhSHf07t8loL20B1icIYsb6jr49Y28="
 after_success:
   - ! '[[ $TRAVIS_BRANCH =~ ^(v[0-9]+\.[0-9]+\.[0-9]+|master)$ && $TRAVIS_PULL_REQUEST
-    = false ]] && ./gradlew install uploadArchives'
+    = false ]] && ./gradlew uploadArchives'
