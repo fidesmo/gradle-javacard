@@ -1,11 +1,11 @@
 language: groovy
 jdk:
-  - oraclejdk7
+- oraclejdk7
 script: ./gradlew test
 env:
   global:
-  - secure: "Up0NphIrAfWbn0eg9maBXtjqZkRfUk6h2kWXsvdVXGhFeURXdO2C0YJ1m/dx47e47Bn8Oeo665gtkFPqmJNMXhgc2cNxVjsCVZKqi5wD9VLKi8QPz4G+O0/0JBgHboc6h0+MNtpz/jccYRt9Zu86xuenayvchEY7jXMpK9NT70U="
-  - secure: "Hhn03e/epta72wSK7gmIWKDmnq+J2pVLgomIfwC9Fc+KiRiH1EO4R62mROVTRJYDLHqY2uDTxE88I2vYruOWuFyQ49Kw6UqA/x8s7YgDN4a7Jw9bCbe3DaNFDJSlv7r5KdRJl4t2mSYX+dhSHf07t8loL20B1icIYsb6jr49Y28="
+  - secure: QHX7CnlV388994Tq4tvl1Og7ogqB8EnCP/Gn4SWJ21f1p7FXxy712tPgfl1kaOmb36IkxGwdAA/DEn+H47eMIbr3s9/itLKwlFOzIxKE/5rBpmoE6ZRMloH9K3ZG7nsRT+li72sBqaoW0KST1xCRS9zjGeYXjPPGElF02almaKY=
+  - secure: RHWQJJ/jnxatDPJd3wQX41fTE5cbW0qfPFfHHcdS9EVBcSMMoFa44McUJmCGFX4WRG1jW6aIWmZqhQJr/f7S+aBA0+WhfwuYMheL7DfcxKg2UJ4EJDMtXBrjJinqGqIi9uEbuAPrUoEpOUA0DBhpd8tz5saf3sqcz+zteHjZCXQ=
 after_success:
-  - ! '[[ $TRAVIS_BRANCH =~ ^(v[0-9]+\.[0-9]+\.[0-9]+|master)$ && $TRAVIS_PULL_REQUEST
-    = false ]] && ./gradlew uploadArchives'
+- '[[ $TRAVIS_BRANCH =~ ^(v[0-9]+\.[0-9]+\.[0-9]+|master)$ && $TRAVIS_PULL_REQUEST
+  = false ]] && ./gradlew uploadArchives'
