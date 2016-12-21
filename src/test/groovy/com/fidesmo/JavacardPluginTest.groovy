@@ -43,6 +43,11 @@ class JavacardPluginTest {
         project.apply plugin: 'javacard'
     }
 
+    @Test void checkJavacardHomeSetupWithGradleProperties() {
+        project.ext['com.fidesmo.gradle.javacard.home'] = '..'
+        def plugin = project.getPlugins().findPlugin('javacard')
+        assertThat(plugin.getJavacardHome(project), equalTo('..'))
+    }
 
     @Test void checkJavacardHomeSetup() {
         def plugin = project.getPlugins().findPlugin('javacard')
