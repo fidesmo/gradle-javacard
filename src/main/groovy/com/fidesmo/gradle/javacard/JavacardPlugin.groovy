@@ -26,13 +26,17 @@ import com.fidesmo.gradle.javacard.ConvertJavacardTask
 
 class JavacardPlugin implements Plugin<Project> {
 
+    static def getJavacardHomeUnchecked(Project project) {
+        project.properties['com.fidesmo.gradle.javacard.home'] ?: System.env['JC_HOME']
+    }
+
     static def getJavacardHome(Project project) {
-        def javacardHome = System.env['JC_HOME']
+        def javacardHome = getJavacardHomeUnchecked(project)
 
         if (!javacardHome) {
-            throw new InvalidUserDataException('JC_HOME must be set in order to use javacard plugin')
+            throw new InvalidUserDataException('Java card home must be set in order to use javacard plugin')
         } else if(! project.file(javacardHome).isDirectory()) {
-            throw new InvalidUserDataException('JC_HOME must point to a valid directory')
+            throw new InvalidUserDataException('Java card home must point to a valid directory')
         }
 
         javacardHome
@@ -59,10 +63,10 @@ class JavacardPlugin implements Plugin<Project> {
                 it.name == 'jcardsim'
             }
 
-            // check if JC_HOME is not set and if jcardsim was available and in that case use jcardsim api
+            // check if Java card home is not set and if jcardsim was available and in that case use jcardsim api
             // this is used to run tests and compile if no javacard sdk is available (e.g ci systems)
-            if (jcardsim != null && System.env['JC_HOME'] == null) {
-                project.logger.info('Using jcardsim as replacement for JC_HOME/lib/api.jar, due to missing JC_HOME.')
+            if (jcardsim != null && getJavacardHomeUnchecked(project) == null) {
+                project.logger.info('Using jcardsim as replacement for JC_HOME/lib/api.jar, due to missing Java card home.')
                 project.dependencies {
                     compile "com.licel:jcardsim:${jcardsim.version}"
                 }
