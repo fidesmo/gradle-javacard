@@ -4,8 +4,8 @@ jdk:
 script: ./gradlew test
 env:
   global:
-  - secure: QHX7CnlV388994Tq4tvl1Og7ogqB8EnCP/Gn4SWJ21f1p7FXxy712tPgfl1kaOmb36IkxGwdAA/DEn+H47eMIbr3s9/itLKwlFOzIxKE/5rBpmoE6ZRMloH9K3ZG7nsRT+li72sBqaoW0KST1xCRS9zjGeYXjPPGElF02almaKY=
-  - secure: RHWQJJ/jnxatDPJd3wQX41fTE5cbW0qfPFfHHcdS9EVBcSMMoFa44McUJmCGFX4WRG1jW6aIWmZqhQJr/f7S+aBA0+WhfwuYMheL7DfcxKg2UJ4EJDMtXBrjJinqGqIi9uEbuAPrUoEpOUA0DBhpd8tz5saf3sqcz+zteHjZCXQ=
+  - secure: ZPg4xpmNKAvN9ofqj0Lhct2d68hEKbFAJrTMmhW5eBfF1TXrSJBSH5I9tL0rH306OLqNuGuxIkpS9Nuz2WdokF2tCvhid4clGO00wy6kjJx8swP3M6fMKmm06/vj+MwmXvQMDJVHpQ8DtkVTjz6u8AidsRdMIpyNMmp1WYoJY/c=
+  - secure: DHXCXTlpKD/eq8IfwF7QmOZtqMvq1OsPGBFh87DT4HzZSiMAF8VXvHC6rDC5cyV+5v6w+4VLvNSnpjGaF5RGKQCGShWGkKsn6Mj1+h4F7eRbC80+kTGChtiC5Fru0niuezoSmCAbFip+UrGOuAGC5POdi0pQVqMu4Sw5PXPHMFY=
 after_success:
 - '[[ $TRAVIS_BRANCH =~ ^(v[0-9]+\.[0-9]+\.[0-9]+|master)$ && $TRAVIS_PULL_REQUEST
   = false ]] && ./gradlew uploadArchives'
