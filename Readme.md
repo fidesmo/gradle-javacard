@@ -23,38 +23,38 @@ Include the new version of the plugin from OSS Sonatype snapshot by adding the f
     apply plugin: 'javacard'
 
     buildscript {
-        /* Specify which version of the JavaCard SDK should be used
-           to build this project */
-        sdkVersion = "3.0.4"
 
         repositories {
             maven { url 'http://releases.marmeladburk.fidesmo.com/' }
         }
 
         dependencies {
-            classpath 'com.fidesmo:gradle-javacard:0.2.4'
+            classpath 'com.fidesmo:gradle-javacard:0.2.7'
         }
     }
 
     javacard {
+        /* Specify which version of the JavaCard SDK should be used
+           to build this project. Supported: 2.2.? and 3.0.? */
+        sdkVersion = "3.0.4"
+
         cap {
-             aid = '0x12:0x34:0x00:0x00:0x00:0x01'
-             packageName = 'com.example.my.jc.code'
-             applet {
+            aid = '0x12:0x34:0x00:0x00:0x00:0x01'
+            packageName = 'com.example.my.jc.code'
+            applet {
                 aid = '0x12:0x34:0x00:0x00:0x00:0x01:0x01'
                 className = 'ClassImplementingApplet'
-             }
-             version = '1.0'
-         }
-     }
+            }
+            version = '1.0'
+        }
+    }
 
 
 ### Installing the Java Card Development Kit
 
 Before compiling you need to download the JavaCard SDK. The current implementation is tested using
 Linux and the `Java Card Development Kit 2.2.2`. It is supposed to work also for all other `Java
-Card Development Kit 2.x.x` under MacOSx, Windows and Linux. **Attention:** The 3.x.x version of the
-JCDK is not yet supported. The development kit can be downloaded on the Oracle
+Card Development Kit 2.x.x` under MacOSx, Windows and Linux. The development kit can be downloaded on the Oracle
 [Website](https://www.oracle.com/technetwork/java/embedded/javacard/downloads/javacard-sdk-2043229.html)
 and must be unpacked
 
