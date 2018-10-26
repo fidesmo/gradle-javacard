@@ -20,35 +20,36 @@ Usage
 Include the new version of the plugin from OSS Sonatype snapshot by adding the following to your
 `build.gradle`:
 
-    apply plugin: 'javacard'
+```groovy
+apply plugin: 'javacard'
 
-    buildscript {
+buildscript {
 
-        repositories {
-            maven { url 'http://releases.marmeladburk.fidesmo.com/' }
-        }
-
-        dependencies {
-            classpath 'com.fidesmo:gradle-javacard:0.2.7'
-        }
+    repositories {
+        maven { url 'http://releases.marmeladburk.fidesmo.com/' }
     }
 
-    javacard {
-        /* Specify which version of the JavaCard SDK should be used
-           to build this project. Supported: 2.2.? and 3.0.? */
-        sdkVersion = "3.0.4"
-
-        cap {
-            aid = '0x12:0x34:0x00:0x00:0x00:0x01'
-            packageName = 'com.example.my.jc.code'
-            applet {
-                aid = '0x12:0x34:0x00:0x00:0x00:0x01:0x01'
-                className = 'ClassImplementingApplet'
-            }
-            version = '1.0'
-        }
+    dependencies {
+        classpath 'com.fidesmo:gradle-javacard:0.2.7'
     }
+}
 
+javacard {
+    /* Specify which version of the JavaCard SDK should be used
+       to build this project. Supported: 2.2.? and 3.0.? */
+    sdkVersion = "3.0.4"
+
+    cap {
+        aid = '0x12:0x34:0x00:0x00:0x00:0x01'
+        packageName = 'com.example.my.jc.code'
+        applet {
+            aid = '0x12:0x34:0x00:0x00:0x00:0x01:0x01'
+            className = 'ClassImplementingApplet'
+        }
+        version = '1.0'
+    }
+}
+```
 
 ### Installing the Java Card Development Kit
 
@@ -58,12 +59,14 @@ Card Development Kit 2.x.x` under MacOSx, Windows and Linux. The development kit
 [Website](https://www.oracle.com/technetwork/java/embedded/javacard/downloads/javacard-sdk-2043229.html)
 and must be unpacked
 
-     # Assumes file to be downloaded as java_card_kit-2_2_2-linux.zip
-     unzip java_card_kit-2_2_2-linux.zip
-     cd java_card_kit-2_2_2/
-     unzip java_card_kit-2_2_2-rr-bin-linux-do.zip
-     unzip java_card_kit-2_2_2-rr-ant-tasks.zip
-     export JC_HOME="${PWD}/java_card_kit-2_2_2"
+```bash
+# Assumes file to be downloaded as java_card_kit-2_2_2-linux.zip
+unzip java_card_kit-2_2_2-linux.zip
+cd java_card_kit-2_2_2/
+unzip java_card_kit-2_2_2-rr-bin-linux-do.zip
+unzip java_card_kit-2_2_2-rr-ant-tasks.zip
+export JC_HOME="${PWD}/java_card_kit-2_2_2"
+```
 
 ### Convert applications to Java Card
 
@@ -79,11 +82,12 @@ To add external exp files to your build, add a dependencies section to your grad
 corresponding paths to the javacardExport configuration. Usually you also will need to add some
 classes in order to compile your java code to class files.
 
-     dependencies {
-         compile files('../path/to/class/files/dir')
-         javacardExport files('../path/to/exp/files/dir')
-     }
-
+```groovy
+dependencies {
+    compile files('../path/to/class/files/dir')
+    javacardExport files('../path/to/exp/files/dir')
+}
+```
 
 ### Support for testing with jcardsim
 
@@ -92,14 +96,15 @@ testing with jcardsim easier. To properly setup testing with jcardsim you have t
 maven repositories to your build.gradle and configure the testCompile configuration to include
 jcardsim in the version you want.
 
-    repositories {
-        mavenCentral()
-    }
+```groovy
+repositories {
+    mavenCentral()
+}
 
-    dependencies {
-        testCompile 'com.licel:jcardsim:2.2.2'
-    }
-
+dependencies {
+    testCompile 'com.licel:jcardsim:2.2.2'
+}
+```
 
 If you follow the above the plugin will filter the runtime classpath of the test source set (usually
 the classes you have under /src/test). The aim is to remove the lib/api.jar from the javacard sdk in
